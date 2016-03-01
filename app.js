@@ -1,21 +1,28 @@
 var express = require('express')
+var mysql = require('mysql')
 var app = express()
 
-app.set('view engine', 'hbs')
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'recit',
+  password : 'recitations',
+  database : 'dd1368'
+});
 
-var resitation_dummy_data = [
-	{
-		number: 3,
-		members: ["angelina", "andreas"]
-	},
-	{
-		number: 5,
-		members: ["kalle"]
-	}
-]
+connection.connect();
+
+app.set('view engine', 'hbs')
  
 app.get('/', function (req, res) {
-  res.render('index', {resitations: resitation_dummy_data})
+	connection.query('SHOW TABLES', function(err, rows, fields) {
+		if (err) throw err;
+ 		console.log('The solution is: ', rows);
+ 		res.render('index', {resitations: rows})
+	});
+})
+
+app.post('/user', function (req, res) {
+
 })
 
 console.log("Running on port 3000") 
