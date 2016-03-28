@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.4",
+    "express-hbs": "^0.8.4",
     "hbs": "^4.0.0",
-    "mysql": "^2.10.2"
+    "mysql": "^2.10.2",
+    "serve-favicon": "^2.3.0"
   }
 }
