@@ -1,0 +1,6 @@
+SELECT * FROM requir WHERE rec = X;
+
+for each row:
+	row[i].question = question number
+	row[i].avail_nr = available letters
+	row[i].req_nr = required numbers

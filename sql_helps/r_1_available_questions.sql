@@ -1,5 +1,5 @@
-CREATE TABLE r_1_probs (
-	rec TINYINT(1),
-	nr TINYINT(1),
-	letter VARCHAR(1)
+CREATE TABLE r_avail (
+	rec_nr TINYINT(1),
+	q_nr TINYINT(1),
+	amount_letters VARCHAR(1)
 );

@@ -1,9 +1,12 @@
 <h1>Welcome!</h1>
-<label for="kth_id">Email: </label>
-<input type="text" class="email" id="kth_id" placeholder="Your KTH-mail Name"></input> </br>
-<label for="Password">Password: </label>
-<input type="password" class="passwd" id="pwd" placeholder="Password"></input>
-<input type="button" class="submit" id="subsub" value="TJO!"></input>
-
-
-<script type="text/javascript" src="/login.js"></script>
+{{#if flashmsg}}
+<p style="color:red">Wrong input</p></br>
+{{/if}}
+<form method="post" action="/login" >
+	<label for="kth_id">Email: </label>
+	<input name="kth_id" type="text" class="email" id="kth_id" placeholder="Your KTH-mail Name"></input> </br>
+	<label for="Password">Password: </label>
+	<input name="password" type="password" class="passwd" id="pwd" placeholder="Password"></input>
+	
+	<input type="submit" id="subsub" value="Login"></input>
+</form>
