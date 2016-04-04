@@ -1,30 +1,24 @@
-<h1>Sign up for a recitaiton</h1>
-{{#if choose_group}}
-	<p>Which recitation would you like to take?</p>
-	<form method="post" action"/recitation"> 
-		<div id="rec_parent">
-			<div id="group">
-				<label for="group">Group: </label></br>
-				<div id="boxes">
-					<input name="group" type="radio" value="A">A</input></br>
-					<input name="group" type="radio" value="B">B</input></br>
-					<input name="group" type="radio" value="C">C</input></br>
-					<input name="group" type="radio" value="D">D</input></br>
-				</div>
-			</div>
-			<div id="rec">
-				<label for="rec">Recitation:</label></br>
-				<div id="boxes">
-					<input name="rec" type="radio" value="1">1</input></br>
-					<input name="rec" type="radio" value="2">2</input></br>
-					<input name="rec" type="radio" value="3">3</input></br>
-				</div>
+<h1>Sign up for a recitation</h1>
+<p>Which recitation would you like to take?</p>
+<form method="post" action"/recitation"> 
+	<div id="rec_parent">
+		<div id="group">
+			<label for="group">Group: </label></br>
+			<div id="boxes">
+				<input name="group" type="radio" value="A">A</input></br>
+				<input name="group" type="radio" value="B">B</input></br>
+				<input name="group" type="radio" value="C">C</input></br>
+				<input name="group" type="radio" value="D">D</input></br>
 			</div>
 		</div>
-		<input type="submit" value="Next"></input>
-	</form>
-{{else}}
-	<p>Which questions can you answer?</p>
-	{{{question}}}
-	<input type="submit" value="Submit"></input>
-{{/if}}
+		<div id="rec">
+			<label for="rec">Recitation:</label></br>
+			<div id="boxes">
+				<input name="rec" type="radio" value="1">1</input></br>
+				<input name="rec" type="radio" value="2">2</input></br>
+				<input name="rec" type="radio" value="3">3</input></br>
+			</div>
+		</div>
+	</div>
+	<input type="submit" value="Next" name="submit_group"></input>
+</form>

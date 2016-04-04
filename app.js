@@ -44,24 +44,58 @@ app.get('/', requireLogin, function (req, res) {
 });
 
 app.get('/recitation', requireLogin, function (req, res) {
-	res.render('recitation', {choose_group: true});
+	res.render('recitation');
 });
 
 app.post('/recitation', function(req, res) {
 	connection.query("SELECT * FROM requir WHERE rec = ?;", [req.body.rec], function(err, rows, fields) {
 		if(err) throw err;
 		var alf = ["a", "b", "c", "d", "e", "f"];
+		var numerical = ["first", "second", "third"];
 		var start = "<input type=\"checkbox\" name=\"";
-		var mid ="th\" value=\"";
+		var mid ="\" value=\"";
 		var end = "</input> </br>";
 		var ret = "";
 		for(var i = 0; i < rows.length; i++) {
+			ret += "<div id=\"Q" +  rows[i].question + "\"> <label for=\"" + rows[i].question + "\">" + rows[i].question + ": </label></br> <div id=\"boxes\">";
 			for(var j = 0; j < rows[i].avail_nr; j++) {
-			ret += start + rows[i].question + mid + alf.indexOf(j) + "\">" + alf.indexOf(j) + end;
+			ret += start + numerical[rows[i].question]+ mid + alf[j] + "\">" + alf[j] + end;
 			}
+			ret += "</div> </div>";
 		}
-		res.render('recitation', {choose_group:false, question:ret});
+		res.render('quest', {num:req.body.rec, letter:req.body.group, question:ret});
 	})
+})
+
+app.post('/quest', function(req, res) {
+	if(req.body.number == 1) {
+		connection.query("INSERT INTO rec_1 (user_id, grp, 1_1, 1_2, 1_3, 2_1, 3_1, 3_2) VALUES (?,?,?,?,?,?,?,?);", 
+			[user.kth_id, req.body.grp, req.body.first[0], req.body.first[1], req.body.first[2], req.body.second[0], req.body.third[0], req.body.third[1]], 
+			function(err, rows, fields) {
+				if(err) throw err;
+			});
+	} else if(req.body.number == 2) {
+		connection.query("INSERT INTO rec_2 (user_id, grp, 1_1, 1_2, 2_1, 2_2) VALUES (?,?,?,?,?,?);", 
+			[user.kth_id, req.body.grp, req.body.first[0], req.body.first[1], req.body.second[0], req.body.second[1]], 
+			
+			function(err, rows, fields) {
+				if(err) throw err;
+				console.log(user.kth_id);
+				console.log(req.body.grp);
+				console.log(req.body.first[0]);
+				console.log(req.body.first[1]);
+				console.log(req.body.second[0]);
+				console.log(req.body.second[1]);
+			});
+
+	} else {
+		connection.query("INSERT INTO rec_3 (user_id, grp, 1_1, 1_2, 2_1, 3_1, 3_2) VALUES (?,?,?,?,?,?,?);", 
+			[user.kth_id, req.body.grp, req.body.first[0], req.body.first[1], req.body.second[0], req.body.third[0], req.body.third[1]],
+			function(err, rows, fields) {
+				if(err) throw err;
+			});		
+	}
+	res.redirect('index');
 })
 
 app.get('/login', function(req, res) {

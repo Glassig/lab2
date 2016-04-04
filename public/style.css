@@ -18,10 +18,28 @@
     width: 25%;
     margin: 0 auto; 
 }
+
 form input[type="submit"]{
     width:80px;
     height: 40px;
     font-size: 20px;
+}
+
+#q_parent {
+	display: flex;
+}
+
+#Q1 {
+	flex: 0.25;
+	background: lightgreen;
+}
+#Q2 {
+	flex: 0.25;
+	background: lightblue;
+}
+#Q3 {
+	flex: 0.25;
+	background: lightpink;
 }
 /*
 body {

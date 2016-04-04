@@ -1,0 +1,9 @@
+<h1>Sign up for a recitation {{num}}, group {{letter}}</h1>
+<p>Which questions can you answer?</p>
+<form method="post" action="/recitation">
+	<input type="hidden" value="{{letter}}" name="grp">
+	<div id="q_parent">
+		{{{question}}}
+	</div>
+	<input type="submit" value="Submit" name="submit_q"></input>
+</form>
