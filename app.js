@@ -5,7 +5,6 @@ var mysql = require('mysql')
 var favicon = require('serve-favicon');
 var http = require('http').Server(app);
 var bodyParser = require("body-parser");
-var session = require('client-sessions');
 var helmet = require('helmet'); //to protect against attacks
 
 var connection = mysql.createConnection({
@@ -16,18 +15,9 @@ var connection = mysql.createConnection({
 });
 connection.connect();
 
-app.use(session({
-  cookieName: 'session',
-  secret: 'djrR%[{3k‰#ekFF@@€¢‰¶))§¶j*%DDD',
-  duration: 5 * 60 * 1000,
-  activeDuration: 1 * 60 * 1000,
-}));
-
 app.set('view engine', 'hbs')
 app.use(helmet());
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json()); // Body parser use JSON data
 app.use(express.static(__dirname+'/public'));
 app.use(favicon(__dirname + '/public/favicon.png'));
  
@@ -39,8 +29,9 @@ hbs.registerHelper('times', function(ith, amount) {
 		ret += start + (i+1) + "\">" + alf.indexOf(i) + end;
 	}
 })
+
 app.get('/', requireLogin, function (req, res) {
-	res.render('index', {name: req.session.user.f_name})
+	res.render('index', {name: "bla"})//req.session.user.f_name})
 });
 
 app.get('/recitation', requireLogin, function (req, res) {
@@ -112,24 +103,25 @@ app.post('/login', function(req, res) {
 		} else {
 			//valid user.
 			console.log(req.body.kth_id);
-			req.session.user = rows[0];
-			delete req.session.user.pwd;
+			//req.session.user = rows[0];
+			//delete req.session.user.pwd;
 			res.redirect('/');
 		}
 	})	
 });
-
+/*
 app.get('/logout', function(req, res) {
 	req.session.reset();
 	res.redirect('/');
 });
-
+*/
 function requireLogin (req, res, next) {
-  if (!req.session.user) {
+  /*if (!req.session.user) {
     res.redirect('/login');
   } else {
     next();
-  }
+  }*/
+  next();
 };
 
 
