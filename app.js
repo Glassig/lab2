@@ -66,7 +66,7 @@ app.post('/recitation', function(req, res) {
 
 app.post('/quest', function(req, res) {
 	if(req.body.number == 1) {
-		connection.query("INSERT INTO rec_1 (user_id, grp, 1_1, 1_2, 1_3, 2_1, 3_1, 3_2) VALUES (?,?,?,?,?,?,?,?);", 
+		connection.query("INSERT INTO r_1 (user_id, grp, 1_1, 1_2, 1_3, 2_1, 3_1, 3_2) VALUES (?,?,?,?,?,?,?,?);", 
 			[req.session.user, req.body.grp, req.body.first[0], req.body.first[1], req.body.first[2], req.body.second[0], req.body.third[0], req.body.third[1]], 
 			function(err, rows, fields) {
 				if(err) throw err;
@@ -74,7 +74,7 @@ app.post('/quest', function(req, res) {
 	} else if(req.body.number == 2) {
 		console.log("tjo!!!");
 		console.log(req.session.user);
-		connection.query("INSERT INTO rec_2 (user_id, grp, 1_1, 1_2, 2_1, 2_2) VALUES (?,?,?,?,?,?);", 
+		connection.query("INSERT INTO r_2 (user_id, grp, 1_1, 1_2, 2_1, 2_2) VALUES (?,?,?,?,?,?);", 
 			[req.session.user, req.body.grp, req.body.first[0], req.body.first[1], req.body.second[0], req.body.second[1]], 
 			
 			function(err, rows, fields) {
@@ -87,7 +87,7 @@ app.post('/quest', function(req, res) {
 				console.log(req.body.second[1]);
 			});
 	} else {
-		connection.query("INSERT INTO rec_3 (user_id, grp, 1_1, 1_2, 2_1, 3_1, 3_2) VALUES (?,?,?,?,?,?,?);", 
+		connection.query("INSERT INTO r_3 (user_id, grp, 1_1, 1_2, 2_1, 3_1, 3_2) VALUES (?,?,?,?,?,?,?);", 
 			[req.session.user, req.body.grp, req.body.first[0], req.body.first[1], req.body.second[0], req.body.third[0], req.body.third[1]],
 			function(err, rows, fields) {
 				if(err) throw err;
