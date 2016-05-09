@@ -30,15 +30,19 @@ app.use(favicon(__dirname + '/public/favicon.png'));
 // login middleware
 app.use(bParser.urlencoded({ extended: false }));
 app.use(session({
-  resave: false, // don't save session if unmodified
-  saveUninitialized: false, // don't create session until something stored
-  secret: 'x_SW%NY3}.XQJnUE>sn7[*8SDP4]'
+	resave: false, // don't save session if unmodified
+	saveUninitialized: false, // don't create session until something stored
+	secret: 'x_SW%NY3}.XQJnUE>sn7[*8SDP4]'
 }));
 
 
 app.get('/', requireLogin, function (req, res) {
 	res.render('index', {name: req.session.name})
 });
+
+app.post('/', requireLogin, function (req, res) {
+	res.redirect('/recitation');
+})
 
 app.get('/recitation', requireLogin, function (req, res) {
 	res.render('recitation');
@@ -72,19 +76,10 @@ app.post('/quest', function(req, res) {
 				if(err) throw err;
 			});
 	} else if(req.body.number == 2) {
-		console.log("tjo!!!");
-		console.log(req.session.user);
 		connection.query("INSERT INTO r_2 (user_id, grp, 1_1, 1_2, 2_1, 2_2) VALUES (?,?,?,?,?,?);", 
 			[req.session.user, req.body.grp, req.body.first[0], req.body.first[1], req.body.second[0], req.body.second[1]], 
-			
 			function(err, rows, fields) {
 				if(err) throw err;
-				console.log(req.session.user);
-				console.log(req.body.grp);
-				console.log(req.body.first[0]);
-				console.log(req.body.first[1]);
-				console.log(req.body.second[0]);
-				console.log(req.body.second[1]);
 			});
 	} else {
 		connection.query("INSERT INTO r_3 (user_id, grp, 1_1, 1_2, 2_1, 3_1, 3_2) VALUES (?,?,?,?,?,?,?);", 
