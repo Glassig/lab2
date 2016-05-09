@@ -1,11 +1,17 @@
-var express = require('express');
-var hbs = require('express-hbs');
-var app = express();
-var mysql = require('mysql')
-var favicon = require('serve-favicon');
-var http = require('http').Server(app);
-var bodyParser = require("body-parser");
-var helmet = require('helmet'); //to protect against attacks
+/**
+ * Module dependencies.
+ */
+//var helmet 	= 	require('helmet'); //to protect against attacks
+var express = 	require('express');
+var hbs 	= 	require('express-hbs');
+var mysql 	= 	require('mysql')
+var favicon = 	require('serve-favicon');
+
+var bParser = 	require("body-parser");
+var hash 	= 	require('pass').hash;
+var session = 	require('express-session');
+
+var app 	= 	express();
 
 var connection = mysql.createConnection({
   host     : 'localhost',
@@ -15,23 +21,23 @@ var connection = mysql.createConnection({
 });
 connection.connect();
 
+// config
 app.set('view engine', 'hbs')
-app.use(helmet());
-
+//app.use(helmet());
 app.use(express.static(__dirname+'/public'));
 app.use(favicon(__dirname + '/public/favicon.png'));
- 
-hbs.registerHelper('times', function(ith, amount) {
-	var start = "<input type=\"checkbox\" name=\"" + ith + "th\" value=\"";
-	var end = "</input>";
-	var ret = "";
-	for(var i = 0; i < amount; i++) {
-		ret += start + (i+1) + "\">" + alf.indexOf(i) + end;
-	}
-})
+
+// login middleware
+app.use(bParser.urlencoded({ extended: false }));
+app.use(session({
+  resave: false, // don't save session if unmodified
+  saveUninitialized: false, // don't create session until something stored
+  secret: 'x_SW%NY3}.XQJnUE>sn7[*8SDP4]'
+}));
+
 
 app.get('/', requireLogin, function (req, res) {
-	res.render('index', {name: "bla"})//req.session.user.f_name})
+	res.render('index', {name: req.session.name})
 });
 
 app.get('/recitation', requireLogin, function (req, res) {
@@ -50,7 +56,7 @@ app.post('/recitation', function(req, res) {
 		for(var i = 0; i < rows.length; i++) {
 			ret += "<div id=\"Q" +  rows[i].question + "\"> <label for=\"" + rows[i].question + "\">" + rows[i].question + ": </label></br> <div id=\"boxes\">";
 			for(var j = 0; j < rows[i].avail_nr; j++) {
-			ret += start + numerical[rows[i].question]+ mid + alf[j] + "\">" + alf[j] + end;
+			ret += start + numerical[rows[i].question - 1]+ mid + alf[j] + "\">" + alf[j] + end;
 			}
 			ret += "</div> </div>";
 		}
@@ -61,32 +67,33 @@ app.post('/recitation', function(req, res) {
 app.post('/quest', function(req, res) {
 	if(req.body.number == 1) {
 		connection.query("INSERT INTO rec_1 (user_id, grp, 1_1, 1_2, 1_3, 2_1, 3_1, 3_2) VALUES (?,?,?,?,?,?,?,?);", 
-			[user.kth_id, req.body.grp, req.body.first[0], req.body.first[1], req.body.first[2], req.body.second[0], req.body.third[0], req.body.third[1]], 
+			[req.session.user, req.body.grp, req.body.first[0], req.body.first[1], req.body.first[2], req.body.second[0], req.body.third[0], req.body.third[1]], 
 			function(err, rows, fields) {
 				if(err) throw err;
 			});
 	} else if(req.body.number == 2) {
+		console.log("tjo!!!");
+		console.log(req.session.user);
 		connection.query("INSERT INTO rec_2 (user_id, grp, 1_1, 1_2, 2_1, 2_2) VALUES (?,?,?,?,?,?);", 
-			[user.kth_id, req.body.grp, req.body.first[0], req.body.first[1], req.body.second[0], req.body.second[1]], 
+			[req.session.user, req.body.grp, req.body.first[0], req.body.first[1], req.body.second[0], req.body.second[1]], 
 			
 			function(err, rows, fields) {
 				if(err) throw err;
-				console.log(user.kth_id);
+				console.log(req.session.user);
 				console.log(req.body.grp);
 				console.log(req.body.first[0]);
 				console.log(req.body.first[1]);
 				console.log(req.body.second[0]);
 				console.log(req.body.second[1]);
 			});
-
 	} else {
 		connection.query("INSERT INTO rec_3 (user_id, grp, 1_1, 1_2, 2_1, 3_1, 3_2) VALUES (?,?,?,?,?,?,?);", 
-			[user.kth_id, req.body.grp, req.body.first[0], req.body.first[1], req.body.second[0], req.body.third[0], req.body.third[1]],
+			[req.session.user, req.body.grp, req.body.first[0], req.body.first[1], req.body.second[0], req.body.third[0], req.body.third[1]],
 			function(err, rows, fields) {
 				if(err) throw err;
 			});		
 	}
-	res.redirect('index');
+	res.redirect('/');
 })
 
 app.get('/login', function(req, res) {
@@ -103,25 +110,26 @@ app.post('/login', function(req, res) {
 		} else {
 			//valid user.
 			console.log(req.body.kth_id);
+			req.session.user = req.body.kth_id;
+			req.session.name = req.body.f_name;
 			//req.session.user = rows[0];
 			//delete req.session.user.pwd;
 			res.redirect('/');
 		}
 	})	
 });
-/*
+
 app.get('/logout', function(req, res) {
 	req.session.reset();
 	res.redirect('/');
 });
-*/
+
 function requireLogin (req, res, next) {
-  /*if (!req.session.user) {
-    res.redirect('/login');
-  } else {
-    next();
-  }*/
-  next();
+  	if (!req.session.user) {
+  		res.redirect('/login');
+  	} else {
+    	next();
+  	}
 };
 
 
